@@ -1,0 +1,30 @@
+{
+  "name": "Node.js Server to run scripts",
+  "version": "1.0",
+  "slug": "node_commands",
+  "description": "HTTP bridge to send commands to Node.js scripts",
+  "arch": ["amd64", "aarch64", "armv7"],
+  "startup": "services",
+  "boot": "auto",
+  "ports": {
+    "3000/tcp": 3000
+  },
+  "map": ["config:rw"],
+  "options": {
+    "BLID": "blid",
+    "PASSWORD": "password",
+    "ROBOT_IP": "robot_ip",
+    "PMAP_ID": "pmap_id",
+    "USER_PMAPV_ID": "user_pmapv_id",
+    "PORT": 3000
+  },
+  "schema": {
+    "BLID": "str",
+    "PASSWORD": "str",
+    "ROBOT_IP": "str",
+    "PMAP_ID": "str",
+    "USER_PMAPV_ID": "str",
+    "PORT": "int"
+  },
+  "host_network": true
+}

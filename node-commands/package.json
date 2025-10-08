@@ -1,0 +1,14 @@
+{
+  "name": "node_commands",
+  "version": "1.0.0",
+  "description": "HTTP bridge to send commands to Node.js scripts in HA",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dorita980": "^3.1.11",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  }
+}
