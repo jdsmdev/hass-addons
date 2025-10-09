@@ -8,8 +8,6 @@ const fs = require('fs');
 // Load add-on options
 const config = JSON.parse(fs.readFileSync('/data/options.json', 'utf8'));
 
-console.log('Loaded add-on config:', config);
-
 const {
   BLID,
   PASSWORD,
@@ -46,10 +44,24 @@ roomba.on('error', (err) => {
 
 const cleanRoom = async (rooms) => {
   console.log('🧹 Sending cleanRoom command for rooms:', rooms);
-  const regions = rooms.map(id => ({
+  const regions = rooms.map(({ id, mop }) => ({
     region_id: `${id}`,
     type: 'rid',
-    params: { carpetBoost: true, noAutoPasses: true, operatingMode: 2, twoPass: false, vacHigh: false },
+    params: mop ? {
+      carpetBoost: true,
+      noAutoPasses: true,
+      operatingMode: 6,
+      padWetness: { disposable: 2, reusable: 2 },
+      swScrub: 0,
+      twoPass: false,
+      vacHigh: false
+    } : {
+      carpetBoost: true,
+      noAutoPasses: true,
+      operatingMode: 2,
+      twoPass: false,
+      vacHigh: false
+    },
   }));
 
   await roomba.cleanRoom({
@@ -60,7 +72,7 @@ const cleanRoom = async (rooms) => {
   console.log('✅ Command sent successfully');
 };
 
-app.post('/clean', async (req, res) => {
+app.post('/roomba/clean', async (req, res) => {
   if (!robotReady) {
     return res.status(503).json({ error: 'Roomba not ready yet' });
   }
@@ -72,11 +84,67 @@ app.post('/clean', async (req, res) => {
 
   try {
     await cleanRoom(rooms);
-    res.json({ ok: true, cleaned: rooms });
+    res.status(200).json({ ok: true });
   } catch (err) {
     console.error('❌ cleanRoom failed:', err);
     res.status(500).json({ error: err.message });
   }
 });
 
-app.listen(PORT, () => console.log('HTTP bridge to send commands to Node.js scripts running on port 3000'));
+app.post('/roomba/pause', async (req, res) => {
+  if (!robotReady) {
+    return res.status(503).json({ error: 'Roomba not ready yet' });
+  }
+
+  try {
+    await roomba.pause();
+    res.status(200).json({ ok: true });
+  } catch (err) {
+    console.error('❌ pause failed:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/roomba/resume', async (req, res) => {
+  if (!robotReady) {
+    return res.status(503).json({ error: 'Roomba not ready yet' });
+  }
+
+  try {
+    await roomba.resume();
+    res.status(200).json({ ok: true });
+  } catch (err) {
+    console.error('❌ resume failed:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/roomba/stop', async (req, res) => {
+  if (!robotReady) {
+    return res.status(503).json({ error: 'Roomba not ready yet' });
+  }
+
+  try {
+    await roomba.stop();
+    res.status(200).json({ ok: true });
+  } catch (err) {
+    console.error('❌ stop failed:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/roomba/dock', async (req, res) => {
+  if (!robotReady) {
+    return res.status(503).json({ error: 'Roomba not ready yet' });
+  }
+
+  try {
+    await roomba.dock();
+    res.status(200).json({ ok: true });
+  } catch (err) {
+    console.error('❌ dock failed:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.listen(PORT, () => console.log(`HTTP bridge to send commands to Node.js scripts running on port ${PORT}`));
