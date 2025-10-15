@@ -1,6 +1,6 @@
 {
   "name": "node_commands",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "HTTP bridge to send commands to Node.js scripts in HA",
   "main": "server.js",
   "scripts": {

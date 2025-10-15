@@ -72,78 +72,88 @@ const cleanRoom = async (rooms) => {
   console.log('✅ Command sent successfully');
 };
 
+const logRequest = (req) => {
+  console.log(`➡️ ${req.method} ${req.url} - Body:`, req.body);
+};
+
+const respondWith = (res, statusCode, message) => {
+  console.log(`⬅️ Responding with ${statusCode}: ${message}`);
+  res.status(statusCode).json({ ok: statusCode < 300, message });
+};
+
 app.post('/roomba/clean', async (req, res) => {
+  logRequest(req);
   if (!robotReady) {
-    return res.status(503).json({ error: 'Roomba not ready yet' });
+    return respondWith(res, 503, 'Roomba not ready yet');
   }
 
   const { rooms } = req.body;
   if (!rooms?.length) {
-    return res.status(400).json({ error: 'rooms array required' });
+    return respondWith(res, 400, 'rooms array required');;
   }
 
   try {
     await cleanRoom(rooms);
-    res.status(200).json({ ok: true });
+    respondWith(res, 200, 'Cleaning started');
   } catch (err) {
-    console.error('❌ cleanRoom failed:', err);
-    res.status(500).json({ error: err.message });
+    console.error('❌ Cleaning failed:', err);
+    respondWith(res, 500, err.message);
   }
 });
 
 app.post('/roomba/pause', async (req, res) => {
   if (!robotReady) {
-    return res.status(503).json({ error: 'Roomba not ready yet' });
+    return respondWith(res, 503, 'Roomba not ready yet');
   }
 
   try {
     await roomba.pause();
-    res.status(200).json({ ok: true });
+    respondWith(res, 200, 'Paused');
   } catch (err) {
     console.error('❌ pause failed:', err);
-    res.status(500).json({ error: err.message });
+    respondWith(res, 500, err.message);
   }
 });
 
 app.post('/roomba/resume', async (req, res) => {
   if (!robotReady) {
-    return res.status(503).json({ error: 'Roomba not ready yet' });
+    return respondWith(res, 503, 'Roomba not ready yet');
   }
 
   try {
     await roomba.resume();
-    res.status(200).json({ ok: true });
+    respondWith(res, 200, 'Resumed');
   } catch (err) {
     console.error('❌ resume failed:', err);
-    res.status(500).json({ error: err.message });
+    respondWith(res, 500, err.message);
   }
 });
 
 app.post('/roomba/stop', async (req, res) => {
   if (!robotReady) {
-    return res.status(503).json({ error: 'Roomba not ready yet' });
+    return respondWith(res, 503, 'Roomba not ready yet');
   }
 
   try {
     await roomba.stop();
-    res.status(200).json({ ok: true });
+    respondWith(res, 200, 'Stopped');
   } catch (err) {
     console.error('❌ stop failed:', err);
-    res.status(500).json({ error: err.message });
+    respondWith(res, 500, err.message);
   }
 });
 
 app.post('/roomba/dock', async (req, res) => {
   if (!robotReady) {
-    return res.status(503).json({ error: 'Roomba not ready yet' });
+    return respondWith(res, 503, 'Roomba not ready yet');
   }
 
   try {
     await roomba.dock();
-    res.status(200).json({ ok: true });
+    respondWith(res, 200, 'Docked');
   } catch (err) {
     console.error('❌ dock failed:', err);
-    res.status(500).json({ error: err.message });
+    respondWith(res, 500, err.message);
   }
 });
 

@@ -1,6 +1,6 @@
 {
   "name": "Node.js Server to run scripts",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "slug": "node_commands",
   "description": "HTTP bridge to send commands to Node.js scripts",
   "arch": ["amd64", "aarch64", "armv7"],
