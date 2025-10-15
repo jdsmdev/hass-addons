@@ -43,8 +43,9 @@ roomba.on('error', (err) => {
 });
 
 const cleanRoom = async (rooms) => {
-  console.log('🧹 Sending cleanRoom command for rooms:', rooms);
-  const regions = rooms.map(({ id, mop }) => ({
+  const roomsToClean = rooms.filter(r => r.id);
+  console.log('🧹 Sending cleanRoom command for rooms:', roomsToClean);
+  const regions = roomsToClean.map(({ id, mop }) => ({
     region_id: `${id}`,
     type: 'rid',
     params: mop ? {
