@@ -158,4 +158,18 @@ app.post('/roomba/dock', async (req, res) => {
   }
 });
 
+app.post('/roomba/state', async (req, res) => {
+  if (!robotReady) {
+    return respondWith(res, 503, 'Roomba not ready yet');
+  }
+
+  try {
+    const state = await roomba.getRobotState(['lastCommand']);
+    respondWith(res, 200, state);
+  } catch (err) {
+    console.error('❌ get state failed:', err);
+    respondWith(res, 500, err.message);
+  }
+});
+
 app.listen(PORT, () => console.log(`HTTP bridge to send commands to Node.js scripts running on port ${PORT}`));
