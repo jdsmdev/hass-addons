@@ -1,0 +1,42 @@
+name: Portfolio Builder
+version: "0.1.0"
+slug: portfolio_builder
+description: Build and monitor factor portfolios and run the earnings experiment.
+url: https://github.com/jdsmdev/portfolio-builder
+arch:
+  - aarch64
+image: ghcr.io/jdsmdev/portfolio-builder-addon
+startup: application
+boot: auto
+init: false
+ingress: true
+ingress_port: 3001
+panel_icon: mdi:chart-line
+panel_title: Portfolio Builder
+watchdog: http://[HOST]:[PORT:3001]/health
+backup: cold
+stage: experimental
+options:
+  GEMINI_MODEL: gemini-3.5-flash
+  EARNINGS_PIPELINE_ENABLED: false
+  EARNINGS_PIPELINE_HORIZON_DAYS: 0
+  EARNINGS_PIPELINE_LIMIT: 25
+  EARNINGS_PIPELINE_CAP_TIERS: "6,5,4"
+  ETORO_DEMO_TRADING_ENABLED: false
+  ETORO_DEMO_STAKE: 25
+  ETORO_DEMO_LEVERAGE: 2
+  ETORO_DEMO_STOP_LOSS_PERCENT: 50
+schema:
+  INVITE_CODE: password?
+  GEMINI_API_KEY: password?
+  GEMINI_MODEL: str
+  ETORO_API_KEY: password?
+  ETORO_USER_KEY: password?
+  ETORO_DEMO_TRADING_ENABLED: bool
+  ETORO_DEMO_STAKE: float
+  ETORO_DEMO_LEVERAGE: int
+  ETORO_DEMO_STOP_LOSS_PERCENT: float
+  EARNINGS_PIPELINE_ENABLED: bool
+  EARNINGS_PIPELINE_HORIZON_DAYS: int
+  EARNINGS_PIPELINE_LIMIT: int
+  EARNINGS_PIPELINE_CAP_TIERS: str
