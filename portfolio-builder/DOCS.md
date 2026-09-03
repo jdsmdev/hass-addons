@@ -20,13 +20,18 @@ The add-on generates and retains its JWT signing secret in persistent storage. I
 
 Do not run GitHub Actions and this add-on as simultaneous writers.
 
-1. Disable eToro execution in GitHub Actions.
-2. Stop the GitHub earnings schedule.
-3. Back up the existing SQLite database.
-4. Stop this add-on.
-5. Restore the database as `/data/portfolio-builder.db` using a controlled Home Assistant backup or add-on data import.
-6. Start this add-on with both scheduling and eToro execution disabled.
-7. Validate the data before enabling scheduling.
+1. Keep **Earnings pipeline enabled**, **eToro demo trading enabled**, and **Import database on start** off in the add-on.
+2. Stop any local backend or GitHub workflow that can write the source database.
+3. From the source repository, run `npm run addon:export-db`. This creates a consistent snapshot at `~/Downloads/portfolio-builder-import.db` without modifying the source database.
+4. Copy that file into Home Assistant's `share` folder with Samba, Studio Code Server, SSH, or another trusted file-transfer method. Its final Home Assistant path must be `/share/portfolio-builder-import.db`.
+5. Stop the Portfolio Builder add-on if it is running.
+6. Enable **Import database on start**, then start the add-on.
+7. Confirm the log says that the database was imported and that the application is listening. The importer validates SQLite integrity first and preserves any previous add-on database as `/data/portfolio-builder.pre-import.db`.
+8. Disable **Import database on start** and restart the add-on. A checksum marker prevents the same snapshot from being imported twice, but the option should not remain enabled.
+9. Sign in with the account from the imported database and verify assets, portfolios, strategies, earnings records, and paper trades. Existing login sessions do not transfer, because the add-on has its own JWT signing secret.
+10. Delete `/share/portfolio-builder-import.db` after validation because it contains private application data, then create and download a Home Assistant backup.
+
+Do not replace the import file with a newer snapshot while **Import database on start** remains enabled: a new checksum intentionally triggers a new import and overwrites changes made in the add-on since the previous import.
 
 ## Earnings configuration
 

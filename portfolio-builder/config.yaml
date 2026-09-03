@@ -1,5 +1,5 @@
 name: Portfolio Builder
-version: "0.1.1"
+version: "0.1.2"
 slug: portfolio_builder
 description: Build and monitor factor portfolios and run the earnings experiment.
 url: https://github.com/jdsmdev/portfolio-builder
@@ -16,7 +16,10 @@ panel_title: Portfolio Builder
 watchdog: http://[HOST]:[PORT:3001]/health
 backup: cold
 stage: experimental
+map:
+  - type: share
 options:
+  IMPORT_DATABASE_ON_START: false
   ENABLE_SCRAPING: false
   GEMINI_MODEL: gemini-3.5-flash
   EARNINGS_PIPELINE_ENABLED: false
@@ -29,6 +32,7 @@ options:
   ETORO_DEMO_STOP_LOSS_PERCENT: 50
 schema:
   INVITE_CODE: password?
+  IMPORT_DATABASE_ON_START: bool
   FINNHUB_API_KEY: password?
   ENABLE_SCRAPING: bool
   GEMINI_API_KEY: password?
