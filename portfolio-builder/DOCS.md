@@ -32,6 +32,10 @@ Do not run GitHub Actions and this add-on as simultaneous writers.
 
 A Gemini key is needed when the configured provider is Gemini. eToro credentials are needed only for eToro demo execution.
 
+A Finnhub API key is optional. When configured, it supplies company news to the earnings agent and additional stock fundamentals during enrichment. Without it, Finnhub-backed data is skipped and the application continues with its other data sources.
+
+StockAnalysis.com scraping is disabled by default. Enable it only when you want enrichment to fill data that the market-data APIs did not provide.
+
 Keep eToro demo execution disabled until local scheduling, persistence, reconciliation, and backups have been observed successfully over multiple sessions.
 
 The initial add-on release retains the application's current interval scheduler. It is not yet the minute-aligned durable scheduler required for narrow broker entry windows, so broker execution must remain disabled during this implementation phase.
