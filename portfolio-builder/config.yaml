@@ -1,5 +1,5 @@
 name: Portfolio Builder
-version: "0.1.3"
+version: "0.2.0"
 slug: portfolio_builder
 description: Build and monitor factor portfolios and run the earnings experiment.
 url: https://github.com/jdsmdev/portfolio-builder
